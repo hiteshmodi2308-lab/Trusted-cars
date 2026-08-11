@@ -1,0 +1,6 @@
+{
+  "name": "Trusted Cars",
+  "description": "Premium pre-owned car dealership website with inventory, search, EMI calculator, enquiry management, and admin dashboard for Trusted Cars in Karol Bagh, Delhi.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
