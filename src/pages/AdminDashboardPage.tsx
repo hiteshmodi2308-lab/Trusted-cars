@@ -80,25 +80,67 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ token, o
   const [carImages, setCarImages] = useState<CarImage[]>([]);
   const [uploadingImage, setUploadingImage] = useState(false);
 
-  // Gallery File Upload Handler
+  // Gallery File Upload Handler with Canvas Compression
   const handleGalleryFileUpload = (files: FileList | null) => {
     if (!files || files.length === 0) return;
     setUploadingImage(true);
 
     const fileArray = Array.from(files);
     const newImagesPromises = fileArray.map((file, idx) => {
-      return new Promise<CarImage>((resolve, reject) => {
+      return new Promise<CarImage>((resolve) => {
         const reader = new FileReader();
         reader.onload = (e) => {
-          const url = e.target?.result as string;
+          const rawUrl = e.target?.result as string;
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const MAX_DIM = 1200;
+            let width = img.width;
+            let height = img.height;
+            if (width > height) {
+              if (width > MAX_DIM) {
+                height = Math.round((height * MAX_DIM) / width);
+                width = MAX_DIM;
+              }
+            } else {
+              if (height > MAX_DIM) {
+                width = Math.round((width * MAX_DIM) / height);
+                height = MAX_DIM;
+              }
+            }
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            let compressedUrl = rawUrl;
+            if (ctx) {
+              ctx.drawImage(img, 0, 0, width, height);
+              compressedUrl = canvas.toDataURL('image/jpeg', 0.8);
+            }
+            resolve({
+              id: `img-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+              url: compressedUrl,
+              isPrimary: carImages.length === 0 && idx === 0,
+              order: carImages.length + idx,
+            });
+          };
+          img.onerror = () => {
+            resolve({
+              id: `img-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+              url: rawUrl,
+              isPrimary: carImages.length === 0 && idx === 0,
+              order: carImages.length + idx,
+            });
+          };
+          img.src = rawUrl;
+        };
+        reader.onerror = () => {
           resolve({
             id: `img-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
-            url,
+            url: 'https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=1200&q=80',
             isPrimary: carImages.length === 0 && idx === 0,
             order: carImages.length + idx,
           });
         };
-        reader.onerror = reject;
         reader.readAsDataURL(file);
       });
     });
