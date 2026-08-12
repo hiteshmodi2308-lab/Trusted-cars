@@ -51,7 +51,7 @@ export const BrowseCarsPage: React.FC<BrowseCarsPageProps> = ({ onNavigate, init
     try {
       const res = await fetchCars(currentFilters);
       if (res) {
-        setCars(res.cars || []);
+        setCars(Array.isArray(res.cars) ? res.cars : []);
         if (res.pagination) {
           setPagination({
             page: res.pagination.page,

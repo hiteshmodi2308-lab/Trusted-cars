@@ -1,6 +1,144 @@
 import { Car, Lead, TestDrive, SellRequest, SiteSettings, CarStatus, DashboardStats } from '../types/index.js';
 
 // Base API fetch wrapper
+const fallbackCars: Car[] = [
+  {
+    id: 'car-101',
+    slug: 'maruti-dzire-zxi-plus-2020-delhi',
+    make: 'Maruti Suzuki',
+    model: 'Dzire',
+    variant: 'ZXi Plus',
+    price: 585000,
+    year: 2020,
+    manufacturingYear: 2020,
+    kmDriven: 32000,
+    fuel: 'Petrol',
+    transmission: 'Manual',
+    bodyType: 'Sedan',
+    color: 'Pearl Arctic White',
+    engine: '1197 cc K12N',
+    mileage: '23.26 kmpl',
+    owners: 1,
+    registrationNumber: 'DL 01 CX 4819',
+    registrationLocation: 'Delhi (DL-01 North)',
+    insurance: 'Comprehensive valid till Nov 2026',
+    description: 'Immaculate single-owner Maruti Dzire ZXi Plus in pristine Arctic White. Fully dealer serviced with logbooks. Equipped with push button start, 7-inch SmartPlay Studio touchscreen with Apple CarPlay, automatic climate control, alloy wheels, and reverse parking camera with sensors.',
+    features: [
+      'Touchscreen Infotainment',
+      'Apple CarPlay & Android Auto',
+      'Push Button Start/Stop',
+      'Automatic Climate Control',
+      'Precision Cut Alloy Wheels',
+      'Dual Airbags & ABS with EBD',
+      'Reverse Camera & Sensors',
+    ],
+    specifications: {
+      'Engine Displacement': '1197 cc',
+      'Max Power': '88.50 bhp @ 6000 rpm',
+      'Max Torque': '113 Nm @ 4400 rpm',
+      'Seating Capacity': '5 Persons',
+      'Fuel Tank Capacity': '37 Litres',
+    },
+    location: 'Karol Bagh, Delhi',
+    featured: true,
+    status: 'Available' as CarStatus,
+    images: [
+      { id: 'img-101-1', url: 'https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=1200&q=80', isPrimary: true, order: 0 },
+      { id: 'img-101-2', url: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=1200&q=80', isPrimary: false, order: 1 },
+    ],
+    inspectionScore: 98,
+    createdAt: '2026-08-01T00:00:00.000Z',
+    updatedAt: '2026-08-01T00:00:00.000Z',
+  },
+  {
+    id: 'car-102',
+    slug: 'hyundai-creta-sx-o-turbo-2021-delhi',
+    make: 'Hyundai',
+    model: 'Creta',
+    variant: 'SX (O) 1.4 Turbo 7DCT',
+    price: 1290000,
+    year: 2021,
+    manufacturingYear: 2021,
+    kmDriven: 28500,
+    fuel: 'Petrol',
+    transmission: 'Automatic',
+    bodyType: 'SUV',
+    color: 'Polar White with Black Roof',
+    engine: '1353 cc Turbo GDi',
+    mileage: '16.8 kmpl',
+    owners: 1,
+    registrationNumber: 'DL 08 CC 9021',
+    registrationLocation: 'Delhi (DL-08 West)',
+    insurance: 'Zero Dep valid till Aug 2026',
+    description: 'Top-end Hyundai Creta SX(O) Turbo automatic with panoramic sunroof, Bose 8-speaker audio system, ventilated front seats, 10.25-inch HD touchscreen, BlueLink connected car tech, and ambient lighting.',
+    features: [
+      'Panoramic Sunroof',
+      'Bose Premium 8-Speaker Sound',
+      'Ventilated Front Seats',
+      '10.25-inch Touchscreen Navigation',
+      'Paddle Shifters',
+      'Air Purifier',
+    ],
+    specifications: {
+      'Engine Displacement': '1353 cc Turbo',
+      'Max Power': '138 bhp @ 6000 rpm',
+      'Max Torque': '242 Nm @ 1500-3200 rpm',
+      'Transmission': '7-Speed Dual Clutch (DCT)',
+    },
+    location: 'Karol Bagh, Delhi',
+    featured: true,
+    status: 'Available' as CarStatus,
+    images: [
+      { id: 'img-102-1', url: 'https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=1200&q=80', isPrimary: true, order: 0 },
+      { id: 'img-102-2', url: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80', isPrimary: false, order: 1 },
+    ],
+    inspectionScore: 96,
+    createdAt: '2026-08-03T00:00:00.000Z',
+    updatedAt: '2026-08-03T00:00:00.000Z',
+  },
+  {
+    id: 'car-103',
+    slug: 'tata-nexon-xz-plus-sunroof-2022-delhi',
+    make: 'Tata',
+    model: 'Nexon',
+    variant: 'XZ+ (S) Diesel',
+    price: 875000,
+    year: 2022,
+    manufacturingYear: 2022,
+    kmDriven: 22000,
+    fuel: 'Diesel',
+    transmission: 'Manual',
+    bodyType: 'SUV',
+    color: 'Foliage Green',
+    engine: '1497 cc Revotorq',
+    mileage: '22.4 kmpl',
+    owners: 1,
+    registrationNumber: 'DL 03 EC 1109',
+    registrationLocation: 'Delhi (DL-03 South)',
+    insurance: 'Comprehensive valid till March 2027',
+    description: '5-Star Global NCAP safety rated Tata Nexon XZ+ Sunroof edition. Exceptional fuel efficiency, electric sunroof, Harman sound system, automatic headlamps.',
+    features: [
+      '5-Star NCAP Safety Rating',
+      'Electric Sunroof',
+      'Harman 8-Speaker Infotainment',
+      'Automatic Climate Control',
+    ],
+    specifications: {
+      'Engine Displacement': '1497 cc Diesel',
+      'Max Power': '108.5 bhp @ 4000 rpm',
+    },
+    location: 'Karol Bagh, Delhi',
+    featured: true,
+    status: 'Available' as CarStatus,
+    images: [
+      { id: 'img-103-1', url: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=1200&q=80', isPrimary: true, order: 0 },
+    ],
+    inspectionScore: 97,
+    createdAt: '2026-08-04T00:00:00.000Z',
+    updatedAt: '2026-08-04T00:00:00.000Z',
+  },
+];
+
 async function apiFetch<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const token = typeof window !== 'undefined' ? localStorage.getItem('admin_token') : null;
 
@@ -41,7 +179,7 @@ async function apiFetch<T>(endpoint: string, options: RequestInit = {}): Promise
     throw new Error(data?.error || 'An unexpected error occurred.');
   }
 
-  // STATIC HOST FALLBACK (Netlify / Vercel static output handling)
+  // STATIC HOST FALLBACK (Netlify / Vercel / Static Hosting)
   if (endpoint.startsWith('/admin/login')) {
     if (options.body) {
       try {
@@ -66,14 +204,30 @@ async function apiFetch<T>(endpoint: string, options: RequestInit = {}): Promise
 
   if (endpoint.startsWith('/admin/stats')) {
     return {
-      totalCars: 12,
-      availableCars: 10,
-      soldCars: 2,
-      totalLeads: 24,
-      pendingLeads: 8,
-      testDrives: 15,
-      sellRequests: 9,
+      totalCars: fallbackCars.length,
+      availableCars: fallbackCars.length,
+      soldCars: 0,
+      totalLeads: 12,
+      pendingLeads: 4,
+      testDrives: 8,
+      sellRequests: 5,
     } as unknown as T;
+  }
+
+  // Handle specific car routes for static fallback
+  if (endpoint.includes('/cars/featured')) {
+    return fallbackCars.filter((c) => c.featured) as unknown as T;
+  }
+
+  if (endpoint.includes('/cars/slug/')) {
+    const slug = endpoint.split('/cars/slug/')[1]?.split('?')[0];
+    const decodedSlug = decodeURIComponent(slug || '');
+    const found = fallbackCars.find((c) => c.slug === decodedSlug) || fallbackCars[0];
+    return found as unknown as T;
+  }
+
+  if (endpoint.includes('/similar')) {
+    return fallbackCars.slice(0, 2) as unknown as T;
   }
 
   if (endpoint.startsWith('/admin/cars') || endpoint.startsWith('/cars')) {
@@ -81,15 +235,17 @@ async function apiFetch<T>(endpoint: string, options: RequestInit = {}): Promise
       return { success: true, message: 'Action completed successfully.' } as unknown as T;
     }
     if (endpoint.includes('ids=')) {
-      return { cars: [] } as unknown as T;
-    }
-    if (endpoint.includes('/slug/') || endpoint.includes('/similar')) {
-      return [] as unknown as T;
+      return { cars: fallbackCars } as unknown as T;
     }
     return {
-      cars: [],
-      pagination: { total: 0, page: 1, limit: 12, totalPages: 1 },
-      filterOptions: { makes: [], models: [], bodyTypes: [], fuelTypes: [] },
+      cars: fallbackCars,
+      pagination: { total: fallbackCars.length, page: 1, limit: 12, totalPages: 1 },
+      filterOptions: {
+        makes: ['Maruti Suzuki', 'Hyundai', 'Tata', 'Honda'],
+        models: ['Dzire', 'Creta', 'Nexon', 'i20', 'City'],
+        bodyTypes: ['Sedan', 'SUV', 'Hatchback'],
+        fuelTypes: ['Petrol', 'Diesel'],
+      },
     } as unknown as T;
   }
 

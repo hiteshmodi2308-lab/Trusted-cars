@@ -57,8 +57,8 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
           fetchFeaturedCars(),
           fetchCars({ limit: 6, sort: 'newest' }),
         ]);
-        setFeaturedCars(feat || []);
-        setRecentCars(rec?.cars || []);
+        setFeaturedCars(Array.isArray(feat) ? feat : []);
+        setRecentCars(rec && Array.isArray(rec.cars) ? rec.cars : []);
       } catch (err) {
         console.error('Failed to load cars for homepage:', err);
       } finally {

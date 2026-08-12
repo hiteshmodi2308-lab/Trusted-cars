@@ -58,12 +58,12 @@ export const CarDetailPage: React.FC<CarDetailPageProps> = ({ slug, onNavigate }
       setError('');
       try {
         const found = await fetchCarBySlug(slug);
-        if (found) {
+        if (found && found.id && typeof found === 'object' && !Array.isArray(found)) {
           setCar(found);
           addRecentlyViewedCarId(found.id);
           // Fetch similar make/price cars
           const sim = await fetchCars({ make: found.make, limit: 3 });
-          setSimilarCars((sim?.cars || []).filter((c) => c.id !== found.id));
+          setSimilarCars((sim && Array.isArray(sim.cars) ? sim.cars : []).filter((c) => c.id !== found.id));
         } else {
           setError('Car not found or has been removed from inventory.');
         }
