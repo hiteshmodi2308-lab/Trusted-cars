@@ -156,12 +156,16 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ token, o
         fetchSellEnquiries(token),
         fetchTestDrives(token),
       ]);
-      setCars(c || []);
-      setLeads(l || []);
-      setSellRequests(s || []);
-      setTestDrives(t || []);
+      setCars(Array.isArray(c) ? c : (c && Array.isArray((c as any).cars) ? (c as any).cars : []));
+      setLeads(Array.isArray(l) ? l : []);
+      setSellRequests(Array.isArray(s) ? s : []);
+      setTestDrives(Array.isArray(t) ? t : []);
     } catch (err) {
       console.error('Failed to load admin data:', err);
+      setCars([]);
+      setLeads([]);
+      setSellRequests([]);
+      setTestDrives([]);
     } finally {
       setLoading(false);
     }

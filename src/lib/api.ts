@@ -418,7 +418,10 @@ export async function fetchAdminCars(token?: string, status?: string, search?: s
   const params = new URLSearchParams();
   if (status) params.append('status', status);
   if (search) params.append('search', search);
-  return apiFetch<Car[]>(`/admin/cars${params.toString() ? `?${params.toString()}` : ''}`);
+  const res: any = await apiFetch(`/admin/cars${params.toString() ? `?${params.toString()}` : ''}`);
+  if (Array.isArray(res)) return res;
+  if (res && Array.isArray(res.cars)) return res.cars;
+  return fallbackCars;
 }
 
 export async function createCar(token: string, carData: Partial<Car>): Promise<{ success: boolean; car: Car }> {
@@ -458,7 +461,10 @@ export async function deleteCar(token: string, id: string): Promise<{ success: b
 }
 
 export async function fetchAdminLeads(): Promise<Lead[]> {
-  return apiFetch<Lead[]>('/admin/leads');
+  const res: any = await apiFetch('/admin/leads');
+  if (Array.isArray(res)) return res;
+  if (res && Array.isArray(res.leads)) return res.leads;
+  return [];
 }
 
 export async function fetchLeads(token?: string): Promise<Lead[]> {
@@ -477,7 +483,10 @@ export async function deleteLead(id: string): Promise<{ success: boolean }> {
 }
 
 export async function fetchAdminTestDrives(): Promise<TestDrive[]> {
-  return apiFetch<TestDrive[]>('/admin/test-drives');
+  const res: any = await apiFetch('/admin/test-drives');
+  if (Array.isArray(res)) return res;
+  if (res && Array.isArray(res.testDrives)) return res.testDrives;
+  return [];
 }
 
 export async function fetchTestDrives(token?: string): Promise<TestDrive[]> {
@@ -496,7 +505,10 @@ export async function deleteTestDrive(id: string): Promise<{ success: boolean }>
 }
 
 export async function fetchAdminSellRequests(): Promise<SellRequest[]> {
-  return apiFetch<SellRequest[]>('/admin/sell-requests');
+  const res: any = await apiFetch('/admin/sell-requests');
+  if (Array.isArray(res)) return res;
+  if (res && Array.isArray(res.sellRequests)) return res.sellRequests;
+  return [];
 }
 
 export async function fetchSellEnquiries(token?: string): Promise<SellRequest[]> {
